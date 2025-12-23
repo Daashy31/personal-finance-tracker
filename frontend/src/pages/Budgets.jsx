@@ -58,13 +58,23 @@ const Budgets = () => {
                 <td>{row.category}</td>
                 <td>₹{row.budget}</td>
                 <td>₹{row.spent}</td>
-                <td
-                  style={{
-                    color: row.remaining < 0 ? 'red' : 'green',
-                  }}
-                >
-                  ₹{row.remaining}
+                <td>
+                  <span
+                    style={{
+                      color: row.remaining < 0 ? 'red' : 'green',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    ₹{row.remaining}
+                  </span>
+
+                  {row.remaining < 0 && (
+                    <div style={{ color: 'red', fontSize: 12 }}>
+                      ⚠ Over budget
+                    </div>
+                  )}
                 </td>
+
                 <td style={{ minWidth: 180 }}>
                   <ProgressBar used={row.spent} total={row.budget} />
                 </td>
