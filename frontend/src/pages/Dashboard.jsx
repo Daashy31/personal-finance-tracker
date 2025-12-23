@@ -56,10 +56,10 @@ const Dashboard = () => {
 
       <h3>Category Breakdown</h3>
 
-      <div style={{ display: 'flex', gap: 40 }}>
+      <div style={{ width: 400, height: 370, marginTop: 20 }}>
         <ExpensePieChart data={summary.expenseByCategory} />
       </div>
-
+      
       <hr />
 
       <MonthlyTrendsChart />

@@ -40,8 +40,8 @@ const MonthlyTrendsChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="income" />
-          <Line type="monotone" dataKey="expense" />
+          <Line type="monotone" dataKey="income" stroke="#4CAF50" strokeWidth={2} />
+          <Line type="monotone" dataKey="expense" stroke="#F44336" strokeWidth={2} />
         </LineChart>
       </ResponsiveContainer>
     </div>
