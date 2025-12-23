@@ -77,6 +77,12 @@ const Budgets = () => {
 
                 <td style={{ minWidth: 180 }}>
                   <ProgressBar used={row.spent} total={row.budget} />
+                  {(row.spent / row.budget) > 0.8 &&
+                    row.remaining >= 0 && (
+                     <div style={{ color: '#FF9800', fontSize: 12 }}>
+                        ⚠ Near limit
+                     </div>
+                  )}
                 </td>
               </tr>
             ))}
