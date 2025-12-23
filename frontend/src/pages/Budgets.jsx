@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import ProgressBar from '../components/ProgressBar';
+import SetBudgetForm from '../components/SetBudgetForm';
 
 const Budgets = () => {
   const [month, setMonth] = useState(
@@ -28,6 +29,14 @@ const Budgets = () => {
         />
       </label>
 
+      <SetBudgetForm
+        month={month}
+        onSuccess={() => {
+          api.get(`/budgets/status?month=${month}`)
+            .then(res => setData(res.data));
+        }}
+      />
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {data.length === 0 ? (
@@ -40,7 +49,7 @@ const Budgets = () => {
               <th>Budget</th>
               <th>Spent</th>
               <th>Remaining</th>
-              <th>Usage</th> {/* ✅ NEW */}
+              <th>Usage</th>
             </tr>
           </thead>
           <tbody>
@@ -56,13 +65,8 @@ const Budgets = () => {
                 >
                   ₹{row.remaining}
                 </td>
-
-                {/* ✅ PROGRESS BAR COLUMN */}
                 <td style={{ minWidth: 180 }}>
-                  <ProgressBar
-                    used={row.spent}
-                    total={row.budget}
-                  />
+                  <ProgressBar used={row.spent} total={row.budget} />
                 </td>
               </tr>
             ))}
