@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import AddTransaction from '../components/AddTransaction';
+import MonthlyTrendsChart from '../components/MonthlyTrendsChart';
+import CategoryPieChart from '../components/CategoryPieChart';
+import ExpensePieChart from '../components/ExpensePieChart';
+import IncomePieChart from '../components/IncomePieChart';
 
 const Dashboard = () => {
   const [summary, setSummary] = useState(null);
@@ -10,7 +14,7 @@ const Dashboard = () => {
     localStorage.removeItem('token');
     window.location.reload();
   };
-  
+
   const refreshSummary = () => {
   api.get('/summary')
     .then(res => setSummary(res.data))
@@ -48,6 +52,23 @@ const Dashboard = () => {
       <p>Total Income: ₹{summary.totalIncome}</p>
       <p>Total Expense: ₹{summary.totalExpense}</p>
       <p>Balance: ₹{summary.balance}</p>
+
+      <hr />
+
+      <h3>Category Breakdown</h3>
+
+      <div style={{ display: 'flex', gap: 40 }}>
+        <ExpensePieChart data={summary.expenseByCategory} />
+        <IncomePieChart data={summary.incomeByCategory} />
+      </div>
+
+      <hr />
+
+      <MonthlyTrendsChart />
+
+      <hr />
+
+      <CategoryPieChart />
 
       <hr />
 
