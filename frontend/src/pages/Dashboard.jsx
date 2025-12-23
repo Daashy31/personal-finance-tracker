@@ -4,7 +4,6 @@ import AddTransaction from '../components/AddTransaction';
 import MonthlyTrendsChart from '../components/MonthlyTrendsChart';
 import CategoryPieChart from '../components/CategoryPieChart';
 import ExpensePieChart from '../components/ExpensePieChart';
-import IncomePieChart from '../components/IncomePieChart';
 
 const Dashboard = () => {
   const [summary, setSummary] = useState(null);
@@ -59,7 +58,6 @@ const Dashboard = () => {
 
       <div style={{ display: 'flex', gap: 40 }}>
         <ExpensePieChart data={summary.expenseByCategory} />
-        <IncomePieChart data={summary.incomeByCategory} />
       </div>
 
       <hr />
