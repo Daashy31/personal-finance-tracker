@@ -6,14 +6,20 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
       const res = await api.post('/auth/login', { email, password });
+
+      console.log('LOGIN RESPONSE:', res.data);
+
       localStorage.setItem('token', res.data.token);
       onLogin();
-    } catch {
-      setError('Invalid credentials');
+    } catch (err) {
+      console.error('LOGIN ERROR:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Login failed');
     }
   };
 
@@ -25,15 +31,17 @@ const Login = ({ onLogin }) => {
         <input
           placeholder="Email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
-        /><br /><br />
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <br /><br />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
-        /><br /><br />
-        <button>Login</button>
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br /><br />
+        <button type="submit">Login</button>
       </form>
     </div>
   );
