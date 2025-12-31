@@ -2,7 +2,8 @@ import { useState } from 'react';
 import api from '../api/axios';
 import CenterLayout from '../components/CenterLayout';
 
-const Login = ({ onLogin, onBack }) => {
+const Register = ({ onSuccess, onBack }) => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -10,21 +11,26 @@ const Login = ({ onLogin, onBack }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.token);
-      onLogin();
-    } catch {
-      setError('Invalid credentials');
+      await api.post('/auth/register', { name, email, password });
+      onSuccess();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Registration failed');
     }
   };
 
   return (
     <CenterLayout>
-      <h2>Sign In</h2>
+      <h2>Sign Up</h2>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+        /><br /><br />
+
         <input
           placeholder="Email"
           value={email}
@@ -38,7 +44,7 @@ const Login = ({ onLogin, onBack }) => {
           onChange={e => setPassword(e.target.value)}
         /><br /><br />
 
-        <button type="submit">Login</button>
+        <button type="submit">Create Account</button>
       </form>
 
       <p style={{ marginTop: 20 }}>
@@ -48,4 +54,4 @@ const Login = ({ onLogin, onBack }) => {
   );
 };
 
-export default Login;
+export default Register;
