@@ -1,54 +1,63 @@
-import { useEffect, useState } from 'react';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Budgets from './pages/Budgets';
-import ThemeToggle from './components/ThemeToggle';
+import { useEffect, useState } from "react";
+import Landing from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Budgets from "./pages/Budgets";
+import ThemeToggle from "./components/ThemeToggle";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [page, setPage] = useState('landing');
+  const [page, setPage] = useState("landing");
 
+  // ✅ Persist login on refresh
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
-      setPage('app');
+      setPage("app");
     }
   }, []);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    setPage("app");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+    setPage("landing");
+  };
 
   return (
     <>
       <ThemeToggle />
 
-      {!isAuthenticated && page === 'landing' && (
+      {!isAuthenticated && page === "landing" && (
         <Landing
-          onSignIn={() => setPage('login')}
-          onSignUp={() => setPage('register')}
+          onSignIn={() => setPage("login")}
+          onSignUp={() => setPage("register")}
         />
       )}
 
-      {!isAuthenticated && page === 'login' && (
+      {!isAuthenticated && page === "login" && (
         <Login
-          onLogin={() => {
-            setIsAuthenticated(true);
-            setPage('app');
-          }}
-          onBack={() => setPage('landing')}
+          onLogin={handleLoginSuccess}
+          onBack={() => setPage("landing")}
         />
       )}
 
-      {!isAuthenticated && page === 'register' && (
+      {!isAuthenticated && page === "register" && (
         <Register
-          onSuccess={() => setPage('login')}
-          onBack={() => setPage('landing')}
+          onSuccess={() => setPage("login")}
+          onBack={() => setPage("landing")}
         />
       )}
 
-      {isAuthenticated && page === 'app' && (
+      {isAuthenticated && page === "app" && (
         <>
-          <Dashboard />
+          <Dashboard onLogout={handleLogout} />
           <Budgets />
         </>
       )}

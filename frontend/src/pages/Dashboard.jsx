@@ -8,6 +8,7 @@ import ExpensePieChart from '../components/ExpensePieChart';
 const Dashboard = () => {
   const [summary, setSummary] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [trendsData, setTrendsData] = useState([]); // ✅ Add state for trends
 
   const logout = () => {
     localStorage.removeItem('token');
@@ -15,29 +16,38 @@ const Dashboard = () => {
   };
 
   const refreshSummary = () => {
-  api.get('/summary')
-    .then(res => setSummary(res.data))
-    .catch(() => logout());
-  };
-
-  const refreshTransactions = () => {
-  api.get('/transactions')
-    .then(res => setTransactions(res.data))
-    .catch(() => logout());
-
-  refreshSummary();
-  };
-
-  useEffect(() => {
-    // Fetch summary
     api.get('/summary')
       .then(res => setSummary(res.data))
       .catch(() => logout());
+  };
 
-    // Fetch transactions
+  const refreshTransactions = () => {
     api.get('/transactions')
       .then(res => setTransactions(res.data))
       .catch(() => logout());
+
+    refreshSummary();
+    refreshTrends(); // ✅ Also refresh trends when transactions change
+  };
+
+  // ✅ New function to fetch trends
+  const refreshTrends = () => {
+    api.get('/trends')
+      .then(res => {
+        const formatted = res.data.map(row => ({
+          month: row.month.slice(0, 7), // YYYY-MM
+          income: Number(row.income),
+          expense: Number(row.expense),
+        }));
+        setTrendsData(formatted);
+      })
+      .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    refreshSummary();
+    refreshTransactions();
+    refreshTrends();
   }, []);
 
   if (!summary) return <p>Loading...</p>;
@@ -55,14 +65,14 @@ const Dashboard = () => {
       <hr />
 
       <h3>Category Breakdown</h3>
-
       <div style={{ width: 400, height: 370, marginTop: 20 }}>
         <ExpensePieChart data={summary.expenseByCategory} />
       </div>
-      
+
       <hr />
 
-      <MonthlyTrendsChart />
+      {/* ✅ Pass trends data as prop */}
+      <MonthlyTrendsChart data={trendsData} />
 
       <hr />
 
@@ -70,6 +80,7 @@ const Dashboard = () => {
 
       <hr />
 
+      {/* ✅ AddTransaction triggers refreshTransactions on success */}
       <AddTransaction onSuccess={refreshTransactions} />
 
       <hr />

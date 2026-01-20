@@ -10,7 +10,7 @@ const Login = ({ onLogin, onBack }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await api.post('/auth/login', { email, password, });
       localStorage.setItem('token', res.data.token);
       onLogin();
     } catch {

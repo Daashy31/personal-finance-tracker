@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import AddCategory from './AddCategory';
 
 const SetBudgetForm = ({ month, onSuccess }) => {
   const [categories, setCategories] = useState([]);
@@ -7,10 +8,15 @@ const SetBudgetForm = ({ month, onSuccess }) => {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  // ✅ Reusable loader
+  const loadCategories = () => {
     api.get('/categories')
       .then(res => setCategories(res.data))
       .catch(() => setError('Failed to load categories'));
+  };
+
+  useEffect(() => {
+    loadCategories();
   }, []);
 
   const handleSubmit = async e => {
@@ -38,6 +44,10 @@ const SetBudgetForm = ({ month, onSuccess }) => {
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
+      {/* ✅ ADD CATEGORY INPUT */}
+      <AddCategory onAdded={loadCategories} />
+
+      {/* ✅ CATEGORY DROPDOWN */}
       <select
         value={categoryId}
         onChange={e => setCategoryId(e.target.value)}
